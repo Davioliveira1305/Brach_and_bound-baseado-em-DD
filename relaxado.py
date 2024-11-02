@@ -55,22 +55,19 @@ def dd_relaxado(no_inicial, dados, w, metodo):
       num_nodes_merge = len(proxima_camada) - w + 1
       # Lista para guardar os estados dos nós que serão unidos
       lista_estados = []
-      # Lista para guardar os valores de fo dos nós que serão unidos
-      lista_valores = []
-      selecao = []
+      cont = 0
       melhor_no = proxima_camada[0]
       for node in proxima_camada:
-        selecao.append(node)
+        cont += 1
         lista_estados.append(node.estado)
-        lista_valores.append(node.valor)
         # remove os nós escolhidos para a mesclagem na camada de referência
         proxima_camada.remove(node)
         if node.valor > melhor_no.valor: melhor_no = node
-        if len(selecao) == num_nodes_merge: break
+        if cont == num_nodes_merge: break
       # União de todos os estados
       estado = set().union(*lista_estados)
       # Maior valor de FO dentre os nós escolhidos para a mesclagem
-      valor = max(lista_valores)
+      valor = melhor_no.valor
       solucao = melhor_no.solucao
       primeira_variavel = melhor_no.primeira_variavel
       # Adiciona o nó mesclado na proxima camada
