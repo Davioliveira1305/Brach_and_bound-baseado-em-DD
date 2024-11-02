@@ -48,14 +48,12 @@ def branch_and_bound_dd(instancia, w_relax, w_restrito, metodo_relax, metodo_res
       melhor_sol = sol_restrita[0]
   return melhor_sol, num_nos
 
-path = 'C:\\Users\\Davi\\Documents\\brach_and_bound\\instancias\\instancia29.txt'
+path = 'C:\\Users\\Davi\\Documents\\brach_and_bound\\instancias\\instancia28.txt'
+
 w_relax = 100
 w_restrito = 100
-metodo_relax = 1
+metodo_relax = 3
 metodo_restrito = 1
-tempo_inicial = time.time()
-sol, num_nos = branch_and_bound_dd(path, w_relax, w_restrito, metodo_relax, metodo_restrito)
-tempo_final = time.time()
-print(f"Tempo total = {tempo_final - tempo_inicial}s")
-print(sol)
-print(f'Foram percorridos {num_nos} nós')
+print(branch_and_bound_dd(path, w_relax, w_restrito, metodo_relax, metodo_restrito))
+
+

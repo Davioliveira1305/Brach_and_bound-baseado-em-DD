@@ -38,39 +38,35 @@ def dd_relaxado(no_inicial, dados, w, metodo):
         if not achou:
           proxima_camada.append(node)
     se_dd_exato_ant = se_dd_exato
-    # lista sentinela(para não modificar a lista de nós atuais)
-    lista_sentinela = proxima_camada.copy()
     # Restrição do tamanho das camadas
     if len(proxima_camada) > w:
       # O nó deixará de ser resolvido de maneira exata
       se_dd_exato = False
       if metodo == 1:
         # Ordenando a camada de referência em ordem crescente pelo valor de função objetivo
-        lista_sentinela = sorted(lista_sentinela, key=lambda x: x.valor, reverse=False)
+        proxima_camada = sorted(proxima_camada, key=lambda x: x.valor, reverse=False)
       elif metodo == 2:
         # Ordenando a camada de referência em ordem decrescente pelo tamanho de estado
-        lista_sentinela = sorted(lista_sentinela, key=lambda x: len(x.estado), reverse=True)
+        proxima_camada = sorted(proxima_camada, key=lambda x: len(x.estado), reverse=True)
       elif metodo == 3:
         # Ordenando a camada de referência aleatoriamente
-        random.shuffle(lista_sentinela)
+        random.shuffle(proxima_camada)
       # Número de nós selecionados para a mesclagem
       num_nodes_merge = len(proxima_camada) - w + 1
-      selecao = []
-      for node in lista_sentinela:
-        selecao.append(node)
-        # remove os nós escolhidos para a mesclagem na camada de referência
-        proxima_camada.remove(node)
-        if len(selecao) == num_nodes_merge: break
       # Lista para guardar os estados dos nós que serão unidos
       lista_estados = []
       # Lista para guardar os valores de fo dos nós que serão unidos
       lista_valores = []
-      melhor_no = selecao[0]
-      # Escolher o nó que possui o maior valor de função objetivo
-      for node_select in selecao:
-        lista_estados.append(node_select.estado)
-        lista_valores = [node_select.valor]
+      selecao = []
+      melhor_no = proxima_camada[0]
+      for node in proxima_camada:
+        selecao.append(node)
+        lista_estados.append(node.estado)
+        lista_valores.append(node.valor)
+        # remove os nós escolhidos para a mesclagem na camada de referência
+        proxima_camada.remove(node)
         if node.valor > melhor_no.valor: melhor_no = node
+        if len(selecao) == num_nodes_merge: break
       # União de todos os estados
       estado = set().union(*lista_estados)
       # Maior valor de FO dentre os nós escolhidos para a mesclagem
