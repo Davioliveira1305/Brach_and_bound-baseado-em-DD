@@ -1,14 +1,17 @@
 
-# Define a estrutura de um nó DD
+#Define a estrutura de um nó DD
 class Node:
-  def __init__(self, estado, valor, solucao, primeira_variavel):
+  def __init__(self, estado, valor, solucao, ordenacao):
     self.estado = estado
     self.valor = valor
     self.solucao = solucao
-    self.primeira_variavel = primeira_variavel
+    self.ordenacao = ordenacao
+
+  def __eq__(self, __o: object) -> bool:
+        return self.valor == __o.valor
 
   def __repr__(self):
-    return f'Estado = {self.estado}, Valor: {self.valor}, Solução = {self.solucao}, Primeira Variável = {self.primeira_variavel}'
+    return f'Estado = {self.estado}, Valor: {self.valor}, Solução = {self.solucao}, Ordenação = {self.ordenacao}'
   
 # Função de transição
 def tj(no, var, d, dados):

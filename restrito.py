@@ -1,12 +1,16 @@
 from estrutura import Node
 from estrutura import tj
+from ordenacao import min_state
 
-def dd_restrito(no_inicial, dados, w, metodo):
+def dd_restrito(no_inicial, dados, w, metodo, metodo_order):
   # Camada de inicialização
   camada_atual = [no_inicial]
   # Domínio das variáveis
   dominio = [0, 1]
-  for var in range(no_inicial.primeira_variavel, len(dados[0])):
+  ordenacao = no_inicial.ordenacao.copy()
+  var = ordenacao[0]
+  while len(ordenacao) != 0:
+    ordenacao.remove(var)
     proxima_camada = []
     # Percorre os nós da camada atual
     for no in camada_atual:
@@ -16,7 +20,7 @@ def dd_restrito(no_inicial, dados, w, metodo):
         # Estado inviável
         if estado is None:
           continue
-        node = Node(estado, valor, solucao, var + 1)
+        node = Node(estado, valor, solucao, ordenacao.copy())
         # Flag
         achou = False
         # Verifica se tem algum nó com estado igual na camada atual
@@ -44,4 +48,12 @@ def dd_restrito(no_inicial, dados, w, metodo):
       elif metodo == 3:
         proxima_camada = proxima_camada
     camada_atual = proxima_camada[:w]
+
+    # Escolhe a próxima variável de acordo com a ordenação 
+    if metodo_order == 1:
+      if len(ordenacao) != 0:
+        var = ordenacao[0]
+    elif metodo_order == 2:
+      if len(ordenacao) != 0:
+        var = min_state(proxima_camada)
   return camada_atual

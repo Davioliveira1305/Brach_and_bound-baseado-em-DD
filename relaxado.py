@@ -1,7 +1,9 @@
 from estrutura import Node
 from estrutura import tj
+from ordenacao import min_state
 import random
-def dd_relaxado(no_inicial, dados, w, metodo):
+
+def dd_relaxado(no_inicial, dados, w, metodo, metodo_order):
   # Lista pra guardar o cutset exato
   cut_set_exato = []
   # Flag para indicar se o nó foi resolvido de maneira exata
@@ -10,7 +12,11 @@ def dd_relaxado(no_inicial, dados, w, metodo):
   camada_atual = [no_inicial]
   # Domínio das variáveis
   dominio = [0, 1]
-  for var in range(no_inicial.primeira_variavel, len(dados[0])):
+  ordenacao = no_inicial.ordenacao.copy()
+  var = ordenacao[0]
+  while len(ordenacao) != 0:
+    ordenacao.remove(var)
+    # Lista para guardar os nós da camada atual
     proxima_camada = []
     # Percorre os nós da camada atual
     for no in camada_atual:
@@ -21,7 +27,7 @@ def dd_relaxado(no_inicial, dados, w, metodo):
         # Se o estado for inviável, passa para a próxima iteração
         if estado is None:
           continue
-        node = Node(estado, valor, solucao, var + 1)
+        node = Node(estado, valor, solucao, ordenacao.copy())
         # Flag para indicar se foi achado nós com mesmos estados na camada atual
         achou = False
         # Verifica se tem nós na camada atual com estados iguais
@@ -44,7 +50,7 @@ def dd_relaxado(no_inicial, dados, w, metodo):
       se_dd_exato = False
       if metodo == 1:
         # Ordenando a camada de referência em ordem crescente pelo valor de função objetivo
-        proxima_camada = sorted(proxima_camada, key=lambda x: x.valor, reverse=False)
+        proxima_camada = sorted(proxima_camada, key=lambda x: x.valor)
       elif metodo == 2:
         # Ordenando a camada de referência em ordem decrescente pelo tamanho de estado
         proxima_camada = sorted(proxima_camada, key=lambda x: len(x.estado), reverse=True)
@@ -69,13 +75,20 @@ def dd_relaxado(no_inicial, dados, w, metodo):
       # Maior valor de FO dentre os nós escolhidos para a mesclagem
       valor = melhor_no.valor
       solucao = melhor_no.solucao
-      primeira_variavel = melhor_no.primeira_variavel
+      ordenacao_merge = melhor_no.ordenacao
       # Adiciona o nó mesclado na proxima camada
-      merge = Node(estado, valor, solucao, primeira_variavel)
+      merge = Node(estado, valor, solucao, ordenacao_merge)
       proxima_camada.append(merge)
     # Identificação do cut-set-exato
-    if(se_dd_exato_ant == True) and (se_dd_exato == False): 
+    if(se_dd_exato_ant == True) and (se_dd_exato == False):
       cut_set_exato = camada_atual
     camada_atual = proxima_camada
-  if len(cut_set_exato) != 0: return camada_atual, cut_set_exato, se_dd_exato
-  else: return camada_atual, [], se_dd_exato
+
+    # Escolhe a próxima variável de acordo com a ordenação 
+    if metodo_order == 1:
+      if len(ordenacao) != 0:
+        var = ordenacao[0]
+    elif metodo_order == 2:
+      if len(ordenacao) != 0:
+        var = min_state(proxima_camada)
+  else: return camada_atual, cut_set_exato, se_dd_exato
