@@ -1,6 +1,8 @@
 from estrutura import Node
 from estrutura import tj
 from ordenacao import min_state
+from ordenacao import cds
+from mesclagens import mesclagem
 import random
 
 def dd_relaxado(no_inicial, dados, w, metodo, metodo_order):
@@ -48,47 +50,21 @@ def dd_relaxado(no_inicial, dados, w, metodo, metodo_order):
     if len(proxima_camada) > w:
       # O nó deixará de ser resolvido de maneira exata
       se_dd_exato = False
-      if metodo == 1:
-        # Ordenando a camada de referência em ordem crescente pelo valor de função objetivo
-        proxima_camada = sorted(proxima_camada, key=lambda x: x.valor)
-      elif metodo == 2:
-        # Ordenando a camada de referência em ordem decrescente pelo tamanho de estado
-        proxima_camada = sorted(proxima_camada, key=lambda x: len(x.estado), reverse=True)
-      elif metodo == 3:
-        # Ordenando a camada de referência aleatoriamente
-        random.shuffle(proxima_camada)
-      # Número de nós selecionados para a mesclagem
-      num_nodes_merge = len(proxima_camada) - w + 1
-      # Lista para guardar os estados dos nós que serão unidos
-      lista_estados = []
-      cont = 0
-      melhor_no = proxima_camada[0]
-      for node in proxima_camada:
-        cont += 1
-        lista_estados.append(node.estado)
-        # remove os nós escolhidos para a mesclagem na camada de referência
-        proxima_camada.remove(node)
-        if node.valor > melhor_no.valor: melhor_no = node
-        if cont == num_nodes_merge: break
-      # União de todos os estados
-      estado = set().union(*lista_estados)
-      # Maior valor de FO dentre os nós escolhidos para a mesclagem
-      valor = melhor_no.valor
-      solucao = melhor_no.solucao
-      ordenacao_merge = melhor_no.ordenacao
-      # Adiciona o nó mesclado na proxima camada
-      merge = Node(estado, valor, solucao, ordenacao_merge)
-      proxima_camada.append(merge)
+      # Heurística de meslagem
+      proxima_camada = mesclagem(proxima_camada, w, metodo)
     # Identificação do cut-set-exato
     if(se_dd_exato_ant == True) and (se_dd_exato == False):
       cut_set_exato = camada_atual
     camada_atual = proxima_camada
 
-    # Escolhe a próxima variável de acordo com a ordenação 
+    # Escolhe a próxima variável de acordo com a ordenação
     if metodo_order == 1:
       if len(ordenacao) != 0:
         var = ordenacao[0]
     elif metodo_order == 2:
       if len(ordenacao) != 0:
         var = min_state(proxima_camada)
+    elif metodo_order == 3:
+      if len(ordenacao) != 0:
+        var = cds(proxima_camada, dados)
   else: return camada_atual, cut_set_exato, se_dd_exato

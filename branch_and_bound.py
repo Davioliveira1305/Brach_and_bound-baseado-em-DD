@@ -11,7 +11,8 @@ path: caminho da instância
 w_relax: tamanho máximo de camada no dd - relaxado
 w_restrito: tamanho máximo de camada no dd - restrito
 metodo_relax: método utilizado para a mesclagem dos nós(1 - Menor FO, 2 - Maior Estado, 3 - Aleatório)
-metodo_restrito: método utilizado para ordenar os nós(1 - Maior FO, 2 - Menor FO, 3 - Ordenação normal)
+metodo_restrito: método utilizado para ordenar os nós(1 - Maior FO, 2 - Menor FO, 3 - Ordenação normal, 4 - Ordenação por borda)
+metodo_order: método utilizado para a ordenação de variáveis(1 - Ordenação normal, 2 - Min State, 3 - CDS)
 """
 
 def branch_and_bound_dd(instancia, w_relax, w_restrito, metodo_relax, metodo_restrito, metodo_order):
@@ -49,4 +50,15 @@ def branch_and_bound_dd(instancia, w_relax, w_restrito, metodo_relax, metodo_res
       melhor_sol = sol_restrita[0]
   return melhor_sol, num_nos
 
-
+path = 'C:\\Users\\Davi\\Documents\\brach_and_bound\\instancias\\instancia29.txt'
+w_relax = 100
+w_restrito = 100
+metodo_relax = 1
+metodo_restrito = 1
+metodo_order = 2
+tempo_inicial = time.time()
+sol, num_nos = branch_and_bound_dd(path, w_relax, w_restrito, metodo_relax, metodo_restrito, metodo_order)
+tempo_final = time.time()
+print(f"Tempo total = {tempo_final - tempo_inicial}s")
+print(sol)
+print(f'Foram percorridos {num_nos} nós')

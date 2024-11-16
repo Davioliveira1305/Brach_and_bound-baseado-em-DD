@@ -1,6 +1,7 @@
 from estrutura import Node
 from estrutura import tj
 from ordenacao import min_state
+from ordenacao import cds
 
 def dd_restrito(no_inicial, dados, w, metodo, metodo_order):
   # Camada de inicialização
@@ -56,4 +57,7 @@ def dd_restrito(no_inicial, dados, w, metodo, metodo_order):
     elif metodo_order == 2:
       if len(ordenacao) != 0:
         var = min_state(proxima_camada)
+    elif metodo_order == 3:
+      if len(ordenacao) != 0:
+        var = cds(proxima_camada, dados)
   return camada_atual
