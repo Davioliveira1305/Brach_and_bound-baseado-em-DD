@@ -53,7 +53,7 @@ def branch_and_bound_dd(instancia, w_relax, w_restrito, metodo_relax, metodo_res
 path = 'C:\\Users\\Davi\\Documents\\brach_and_bound\\instancias\\instancia29.txt'
 w_relax = 100
 w_restrito = 100
-metodo_relax = 1
+metodo_relax = 4
 metodo_restrito = 1
 metodo_order = 2
 tempo_inicial = time.time()
